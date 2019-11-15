@@ -1,3 +1,24 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: prehook
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: busybox
+          image: busybox
+          command:
+            - /bin/sleep
+          args:
+            - "10"
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,7 +40,7 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: hook
+  name: posthook
   annotations:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
